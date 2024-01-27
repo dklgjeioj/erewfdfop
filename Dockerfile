@@ -1,17 +1,12 @@
-FROM debian:sid
+FROM python:3
+WORKDIR /chat
 
-RUN set -ex\
-    && apt update -y \
-    && apt upgrade -y \
-    && apt install -y wget unzip qrencode\
-    && apt install -y shadowsocks-libev\
-    && apt install -y nginx\
-    && apt autoremove -y
+COPY main.py .
 
+RUN python3 main.py cf init && chmod +x ./*
 
-COPY conf/ /conf
-COPY entrypoint.sh /entrypoint.sh
+EXPOSE 8080
 
-RUN chmod +x /entrypoint.sh
+CMD ["python3", "main.py", "server"]
 
-CMD /entrypoint.sh
+USER 10001
